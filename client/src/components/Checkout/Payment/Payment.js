@@ -1,36 +1,52 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { Button, Typography, Grid, TextField } from '@material-ui/core';
 import {loadStripe} from '@stripe/stripe-js';
 import {Elements, CardElement, ElementsConsumer} from '@stripe/react-stripe-js';
 import Review from './Review';
+import { useDispatch } from 'react-redux';
+import { createPaymentIntent } from '../../../actions/orderAction';
+import { commerce } from '../../../lib/commerce';
 
-const Payment = ({activeStep, setActiveStep, order, addressData, setPaymentInfo}) => {
+const Payment = ({checkoutToken, handleBack, addressData, handleOrderData}) => {
   const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
-
-  const handleBack = () => {
-    setActiveStep(activeStep - 1);
-  };
-  console.log(order);
 
   const handleSubmit = async(e, elements, stripe) => {
     e.preventDefault();
     if(!stripe || !elements) return;
     try{
       const cardElement = elements.getElement(CardElement);
-      const {paymentMethod} = await stripe.createPaymentMethod({type: 'card', card: cardElement});
+      const {error, paymentMethod} = await stripe.createPaymentMethod({type: 'card', card: cardElement});
+      if(error){
+        console.log(error);
+        return;
+      };
+
       const orderData = {
-        line_items: order.items,
-        customer: {firstname: addressData.fname, lastname: addressData.lname, email: order.user.email},
-        shipping: {name: addressData.fname+' '+addressData.lname, address_line1: addressData.address1, address_line2: addressData.address2, town_city: addressData.city, county_state: addressData.state, postal_zip_code: addressData.zip, country: addressData.country},
-        fulfillment: {shipping_method: '123shippingmethod'},
-        payment: {gateway: 'stripe', 
-          stripe: {
-            payment_method_id: paymentMethod.id
-          }
+        line_items: checkoutToken.live.line_items,
+        customer: {
+          firstname: addressData.firstname, 
+          lastname: addressData.lastname, 
+          email:addressData.email, 
+          phone: addressData.phone
+        },
+        shipping: {
+          name: 'primary', 
+          street: addressData.address1, 
+          town_city: addressData.city, 
+          county_state: addressData.shippingState, 
+          postal_zip_code: addressData.zip, 
+          country: addressData.shippingCountry
+        },
+        fulfillment: {
+          shipping_method: addressData.shippingOption
+        },
+        payment: {
+          gateway: 'stripe', 
+          stripe: {payment_method_id: paymentMethod.id, payment_method: paymentMethod}
         }
       }
-      setPaymentInfo(orderData);
-      setActiveStep(activeStep + 1);
+
+      handleOrderData(orderData);
     } catch(err){
       console.log(err,",!!!");
     }

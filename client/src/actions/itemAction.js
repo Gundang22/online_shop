@@ -1,4 +1,5 @@
 import * as api from '../api/index.js';
+import { commerce } from '../lib/commerce.js';
 
 export const getItems = () => async (dispatch) => {
     try{
@@ -19,10 +20,10 @@ export const getItems = () => async (dispatch) => {
 export const getItem = (id) => async (dispatch) => {
     try{
         dispatch({type: 'SET_LOADING'});
-        const {data} = await api.fetchOneItem(id);
+        const item = await commerce.products.retrieve(id);
         dispatch({
             type: 'GET_ITEM',
-            payload: data
+            payload: item
         });
     } catch(err){
         dispatch({
@@ -51,7 +52,7 @@ export const searchItem = (searchQuery) => async (dispatch) => {
 export const getItemsPage = (page) => async (dispatch) => {
     try{
         dispatch({type: 'SET_LOADING'});
-        const {data} = await api.fetchItemsPage(page);
+        const {data} = await commerce.products.list();
         dispatch({
             type: 'GET_ITEMS_PAGE',
             payload: data

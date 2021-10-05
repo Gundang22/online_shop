@@ -5,43 +5,44 @@ import Cart from './CartItem';
 import { Alert } from 'react-bootstrap';
 import { Container, Button, Typography } from '@material-ui/core';
 import {CircularProgress} from '@material-ui/core';
-import useStyles from './styles';
 import {postOrder} from '../../actions/orderAction';
-import {getCart} from '../../actions/cartAction';
+import {getCart, updateQty, deleteCartItem} from '../../actions/cartAction';
 import { Toast } from 'react-bootstrap';
+import {Grid} from '@material-ui/core'
 
 function Checkout(){
+    const dispatch = useDispatch();
     const history = useHistory();
     var shipping = 9.99;
-    var total = 0;
-    var subtotal = 0;
-    const classes = useStyles();
-    const dispatch = useDispatch();
-    const userToken = JSON.parse(localStorage.getItem('profile'))?.result;
-    const { items, loading, message } = useSelector((state) => state.cartItem);
+    
+    const { cart, loading, message } = useSelector((state) => state.cartItem);
     const [showToast, setShowToast] = useState(false);
 
-    if(!loading && items !== null){
-        items.forEach(item => {
-            total += item.price * item.quantity;
-        });
-        if(total === 0)
-            shipping = 0;
-        else if (total < 60)
-            shipping = 9.99;
-        else if(total >= 60)
-            shipping = 0;
-        subtotal = total + shipping;
+    useEffect(() => {
+        setShowToast(true);
+    }, [message]);
+
+    useEffect(() => {
+        dispatch(getCart());
+    }, [dispatch]);
+
+    const updateQuantity = (itemid, quantity) => {
+        dispatch(updateQty(itemid, quantity));
+    };
+    const remove = (itemid) => {
+        dispatch(deleteCartItem(itemid));
     };
 
     useEffect(() => {
-        if(localStorage.getItem('profile') !== null){
-            dispatch(getCart());
+        if(!loading){
+            if(cart?.subtotal.raw >= 60) shipping = 0;
+            else shipping = 9.99;
+            document.getElementById('shipping').innerHTML = '$ '+shipping.toFixed(2);
         }
-    }, [dispatch]);
+    }, [cart]);
 
     const orderHandler = () => {
-        dispatch(postOrder(items, history));
+        dispatch(postOrder(cart, history));
     }
 
     return (
@@ -59,39 +60,35 @@ function Checkout(){
                 <h1 className='text-center'>Your Cart</h1>
                 <hr />
                 {
-                    !userToken ?
+                    loading || cart === undefined ? 
                     (
-                        <p style={{textAlign:'center'}}>
-                            You must be logged in to view your cart...
-                        </p>
+                        <CircularProgress />
                     ) : (
-                        loading || items === null ? 
+                        cart?.line_items.length === 0 ? 
                         (
-                            <CircularProgress />
+                            <>
+                                <p style={{textAlign:'center'}}>Oops... Seems like your cart is empty.</p>
+                                <p style={{textAlign:'center'}}>Let's go explore and add a view items to cart.</p>
+                            </>
                         ) : (
-                            items.length === 0 ? 
-                            (
-                                <>
-                                    <p style={{textAlign:'center'}}>Oops... Seems like your cart is empty.</p>
-                                    <p style={{textAlign:'center'}}>Let's go explore and add a view items to cart.</p>
-                                </>
-                            ) : (
-                                <Container style={{maxWidth:'800px'}}>
-                                    {items.map(item => <Cart item={item} key={item._id} />)}
-                                </Container>
-                            )
+                                cart.line_items.map((item) => (
+                                    <Grid item key={item.id}>
+                                        <Cart item={item} updateQuantity={updateQuantity} remove={remove} />
+                                    </Grid>
+                                ))
+                                    
                         )
                     )
                 }
                 <hr />
                 <Container style={{maxWidth:'732px'}}>
-                    <Typography color='textSecondary' style={{float:'right'}}>${total.toFixed(2)}</Typography>
+                    <Typography color='textSecondary' style={{float:'right'}}>${cart?.subtotal.formatted}</Typography>
                     <Typography color='textSecondary'>TOTAL:</Typography>
-                    <Typography color='textSecondary' style={{float:'right'}}>${shipping.toFixed(2)}</Typography>
+                    <Typography id='shipping' color='textSecondary' style={{float:'right'}}>${shipping.toFixed(2)}</Typography>
                     <Typography color='textSecondary'>SHIPPING:</Typography>
-                    <Typography color='textPrimary' variant='h5' style={{float:'right'}}>${subtotal.toFixed(2)}</Typography>
+                    <Typography color='textPrimary' variant='h5' style={{float:'right'}}>${cart?.subtotal.formatted}</Typography>
                     <Typography color='textPrimary' variant='h5'>Subtotal:</Typography>
-                    <Button onClick={orderHandler} variant='contained' color='primary' style={{float:'right', marginTop:'30px'}}>Check Out</Button>
+                    <Button onClick={orderHandler} variant='contained' color='primary' disabled={loading} style={{float:'right', marginTop:'30px'}}>Check Out</Button>
                 </Container>
             </Container>
         </div>

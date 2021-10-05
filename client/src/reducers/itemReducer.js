@@ -1,4 +1,5 @@
 const initialState = {
+    item: null,
     items: null,
     loading: false,
     numberOfPages: null,
@@ -6,7 +7,7 @@ const initialState = {
     message: null,
 }
 
-export default (state = initialState, action) => {
+const reducer = (state = initialState, action) => {
     switch(action.type) {
         case 'SET_LOADING':
             return {
@@ -22,17 +23,18 @@ export default (state = initialState, action) => {
                 message: null,
             };
         case 'GET_ITEMS_PAGE':
-        return {
+            return {
                 ...state,
-                items: action.payload.data,
+                items: action.payload,
                 currentPage: action.payload.currentPage,
                 numberOfPages: action.payload.numberOfPages,
                 loading: false,
                 message: null,
             };
         case 'GET_ITEM':
-            return {...state, 
-                item: action.payload.data,
+            return {
+                ...state, 
+                item: action.payload,
                 loading: false,
                 message: null,
             };
@@ -49,7 +51,6 @@ export default (state = initialState, action) => {
                 currentPage: action.payload.currentPage,
                 numberOfPages: action.payload.numberOfPages,
                 loading: false,
-                message: null,
                 message: action.payload.message,
             };
         case 'UPDATE':
@@ -57,7 +58,6 @@ export default (state = initialState, action) => {
                 ...state,
                 items: state.items.map((item) => item._id === action.payload.data._id ? action.payload.data : item),
                 loading: false,
-                message: null,
                 message: action.payload.message,
             }
         case 'DELETE':
@@ -65,14 +65,12 @@ export default (state = initialState, action) => {
                 ...state,
                 items: state.items.filter((item) => item._id !== action.payload.data),
                 loading: false,
-                message: null,
                 message: action.payload.message,
             }
         case 'SET_MESSAGE':
             return {
                 ...state,
                 loading: false,
-                message: null,
                 message: action.payload.message
             }
         case 'CLEAR':
@@ -81,3 +79,5 @@ export default (state = initialState, action) => {
             return state;
     }
 }
+
+export default reducer;

@@ -23,8 +23,6 @@ const authReducer = (state = initialState, action) => {
         case 'SET_AUTHMESSAGE':
             return {
                 ...state,
-                message: null,
-                message: null,
                 message: action.payload,
             };
         case "AUTH_CLEAR":
@@ -48,13 +46,11 @@ const authReducer = (state = initialState, action) => {
             return {
                 ...state,
                 getAuth: false,
-                message: null,
                 message: action.payload
             }
         case "SET_AUTHERROR":
             return {
                 ...state,
-                message: null,
                 message: action.payload
             }
         default:

@@ -1,33 +1,54 @@
 import * as api from '../api/index.js';
+import { commerce } from '../lib/commerce.js';
 
-export const postOrder = (items, history) => async(dispatch) => {
+export const captureOrder = (checkoutTokenId, orderData, history) => async(dispatch) => {
     try{
         dispatch({type: 'SET_LOADING'});
-        const data = await api.postOrder(items);
+        const newOrder = await commerce.checkout.capture(checkoutTokenId, orderData);
         dispatch({
-            type: 'POST_ORDER',
+            type: 'CAPTURE_ORDER',
+            payload: newOrder,
         });
-        history.push(`/payment/${data.data.orderId}`);
     } catch(err){
+        console.log(err);
         dispatch({
-            type: 'CLIENT_ORDER_ERROR',
-            payload: err.response.data.error,
+            type: 'ORDER_ERROR',
+            payload: err
         });
     }
 }
 
-export const getOneOrder = (orderId) => async(dispatch) => {
+export const postOrder = (cart, history) => async(dispatch) => {
     try{
         dispatch({type: 'SET_LOADING'});
-        const data = await api.getOneOrder(orderId);
+        const token = await commerce.checkout.generateToken(cart.id, {type: 'cart'});
         dispatch({
-            type: 'GET_ONE_ORDER',
-            payload: data.data,
+            type: 'POST_ORDER',
+            payload: token,
+        });
+        history.push(`/payment/${token.id}`);
+    } catch(err){
+        console.log(err,"!2");
+        dispatch({
+            type:'ORDER_ERROR',
+            payload: err
+        })
+    }
+}
+
+export const getOrderToken = (checkoutTokenId) => async(dispatch) => {
+    try{
+        dispatch({type: 'SET_LOADING'});
+        const token = await commerce.checkout.getToken(checkoutTokenId);
+        dispatch({
+            type: 'GET_ORDER_TOKEN',
+            payload: token,
         });
     } catch(err){
+        console.log(err);
         dispatch({
-            type: 'CLIENT_ORDER_ERROR',
-            payload: err.response.data.error,
+            type: 'ORDER_ERROR',
+            payload: err,
         });
     }
 }
@@ -51,12 +72,12 @@ export const getOrders = () => async(dispatch) => {
     try{
         dispatch({type: 'SET_LOADING'});
         const data = await api.getOrders();
-        console.log(data);
         dispatch({
             type: 'GET_ORDERS',
             payload: data.data,
         });
     } catch(err){
+        console.log(err);
         dispatch({
             type: 'ORDER_ERROR',
             payload: err.response.data.error,

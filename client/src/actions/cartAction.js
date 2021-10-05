@@ -1,46 +1,53 @@
 import * as api from '../api/index.js';
+import { commerce } from '../lib/commerce.js';
 
 export const getCart = () => async (dispatch) => {
     try{
-        console.log("?2?");
         dispatch({type: 'SET_LOADING'});
-        const { data } = await api.fetchCart();
-        console.log(data);
+        const data = await commerce.cart.retrieve();
         dispatch({
             type: 'GET_CART',
-            payload: data
-        });
+            payload: data,
+        })
     } catch(err){
-        dispatch({
-            type: 'SET_CARTMESSAGE',
-            payload: err.response.data.error,
-        });
+        console.log(err);
     }
 }
 
-export const addCart = (item) => async (dispatch) => {
+export const addCart = (itemid, quantity) => async(dispatch) => {
     try{
-        dispatch({type: 'SET_LOADING'});
-        const data = await api.addCart(item);
+        const data = await commerce.cart.add(itemid, quantity);
         dispatch({
             type: 'ADD_CART',
-            payload: data.data
+            payload: data,
         });
     } catch(err){
-        dispatch({
-            type: 'SET_CARTMESSAGE',
-            payload: err.response.data.error,
-        });
+        console.log(err);
     }
 }
 
-export const deleteCartItem = (item) => async (dispatch) => {
+export const updateQty = (itemid, quantity) => async(dispatch) => {
     try{
         dispatch({type: 'SET_LOADING'});
-        const data = await api.deleteCartItem(item);
+        const data = await commerce.cart.update(itemid, {quantity});
+        console.log(data);
+        dispatch({
+            type: 'UPDATE_CAR_QTY',
+            payload: data,
+        })
+    } catch(err){
+        console.log(err);
+    }
+}
+
+export const deleteCartItem = (itemid) => async (dispatch) => {
+    try{
+        dispatch({type: 'SET_LOADING'});
+        const data = await commerce.cart.remove(itemid)
+        console.log(data);
         dispatch({
             type: 'DELETE_ITEM_CART',
-            payload: data.data
+            payload: data
         });
     } catch(err){
         dispatch({

@@ -1,21 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles((theme) => ({
-    media: {
-        borderRadius: '20px',
-        objectFit: 'cover',
-        width: '100%',
-        maxHeight: '600px',
-
-    },
-    card: {
-        display: 'flex',
-        width: '100%',
-        [theme.breakpoints.down('sm')]: {
-            flexWrap: 'wrap',
-            flexDirection: 'column',
-        },
-    },
     section: {
         borderRadius: '20px',
         margin: '10px',
@@ -51,5 +36,33 @@ export default makeStyles((theme) => ({
         height: '200px',
         overflowY: 'auto',
         marginRight: '30px',
+    },
+
+    card: {
+        maxWidth: '100%',
+    },
+    media: {
+        height: 0,
+        paddingTop: '56.25%',
+    },
+    cardActions: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        paddingLeft: '20px'
+    },
+    cardContent: {
+        display: 'flex',
+        justifyContent: 'space-between',
+    },
+    itemDetailPaper: {
+        margin:'auto', 
+        maxWidth:'1000px',
+        height: '100vh',
+        padding: '20px', 
+    },
+    divider: {
+        backgroundColor:'black',
+        marginTop:'10px',
+        marginBottom:'10px'
     },
 }));

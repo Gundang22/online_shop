@@ -28,6 +28,7 @@ export const forgotPassword = (email) => API.post(`/auth/forgotpassword`, email)
 export const getResetPassword = (token) => API.get(`/auth/resetpassword/${token}`);
 export const resetPassword = (token, password) => API.post(`auth/resetpassword/${token}`, password);
 
+export const createPaymentIntent = () => API.post(`/order/paymentintent`);
 export const postOrder = (items) => API.post(`/order`, items);
 export const getOneOrder = (orderId) => API.get(`/order/${orderId}`);
 export const confirmOrder = (id, orderData) => API.post(`/order/${id}`, orderData);

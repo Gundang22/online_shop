@@ -28,7 +28,7 @@ const App = () => {
     return (
         <div>
             <Switch>
-                <Route path='/payment/:orderId' component={Payment} />
+                <Route path='/payment/:token' component={Payment} />
                 <div>
                     <NavBar />
                     <Route path='/' exact component={() => <Redirect to='/home' />} />

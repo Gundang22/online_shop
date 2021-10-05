@@ -4,6 +4,17 @@ export default makeStyles((theme) => ({
     root: {
         height: '100vh',
     },
+    divider:{
+        backgroundColor: 'black',
+        margin: '20px'
+    },
+    confirmationGrid:{
+        textAlign:'center',
+    },
+    confirmationText: {
+        paddingTop: '15px',
+        paddingBottom:'15px',
+    },
     paper: {
         margin: theme.spacing(8, 4),
         display: 'flex',
@@ -21,5 +32,21 @@ export default makeStyles((theme) => ({
     payment:{
         display: 'flex',
         justifyContent: 'space-between'
-    }
+    },
+    summary: {
+        width: '100%',
+    },
+    orderItem:{
+        display: 'flex',
+        justifyContent: 'end',
+    },
+    summary_itemDescription: {
+        padding: '0',
+        display: 'inline-grid',
+        alignContent:'space-evenly',
+    },
+    summary_itemDescriptionText:{
+        display: 'flex',
+        alignItems:'center',
+    },
 }));

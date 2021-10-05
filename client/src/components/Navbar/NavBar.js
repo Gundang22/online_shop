@@ -18,14 +18,12 @@ const NavBar = () => {
     const location = useLocation();
 
     const [state, setState] = useState(false);
-    const [dropdown, setDropdown] = useState(false);
 
     const toggleDrawer = () => (event) => {
         setState(!state);
     }
 
     useEffect(()=> {
-        const token = user?.token;
         setUser(JSON.parse(localStorage.getItem('profile')));
     }, [location]);
 

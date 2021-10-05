@@ -7,7 +7,11 @@ export default makeStyles((theme) => ({
     media: {
         borderRadius: '10px',
         objectFit: 'cover',
-        [theme.breakpoints.down('xs')]:{
+        [theme.breakpoints.down('370')]: {
+            width:'80px',
+            height: '80px',
+        },
+        [theme.breakpoints.between('370', '600')]:{
             width: '110px',
             height:'110px',
         },
@@ -16,15 +20,27 @@ export default makeStyles((theme) => ({
             height:'100px',
         },
     },
+    qty: {
+        textAlign:'center', 
+        justifyContent:'end',
+        display:'flex'
+    },
+    qtybutton: {
+        minWidth: '0px',
+        width: '30px',
+        fontSize: '20px',
+        height: '30px',
+        paddingTop: '0px',
+        [theme.breakpoints.down('500')]: {
+            width: '15px',
+        },
+    },
     itemPaper: {
         padding: '10px',
         marginBottom: '10px',
         backgroundColor: '#E1EDE9',
     },
     priceXs: {
-        [theme.breakpoints.down('xs')]:{
-            display:'block',
-        },
         [theme.breakpoints.up('sm')]:{
             display:'none',
         },
@@ -32,9 +48,6 @@ export default makeStyles((theme) => ({
     priceSm: {
         [theme.breakpoints.down('xs')]:{
             display:'none',
-        },
-        [theme.breakpoints.up('sm')]:{
-            display:'block',
         },
     },
     itemName: {

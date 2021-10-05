@@ -6,7 +6,7 @@ const initialState = {
 };
 
 
-export default (state = initialState, action) => {
+const reducer = (state = initialState, action) => {
     switch(action.type) {
         case 'SET_LOADING':
             return {
@@ -17,26 +17,31 @@ export default (state = initialState, action) => {
         case 'GET_CART':
             return {
                 ...state,
-                items: action.payload.items,
                 loading: false,
+                cart: action.payload,
                 message: null,
-                message: action.payload.message || null,
             };
         case 'ADD_CART':
+            console.log(action.payload)
             return {
                 ...state,
-                items: action.payload.items,
                 loading: false,
-                message: null,
-                message: action.payload.message,
+                cart: action.payload.cart,
+                message: `Item ${action.payload.product_name} Added To Cart!`
             };
+        case 'UPDATE_CAR_QTY':
+            return {
+                ...state,
+                loading: null,
+                cart: action.payload.cart,
+                message: null,
+            }
         case 'DELETE_ITEM_CART':
             return {
                 ...state,
-                items: state.items.filter((item) => item._id !== action.payload.id),
                 loading: false,
-                message: null,
-                message: action.payload.message,
+                cart: action.payload.cart,
+                message: 'Cart Item Removed!',
             }
         case 'MISSING_ITEMS':
             return {
@@ -49,10 +54,10 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 loading: false,
-                message: null,
                 message: action.payload,
             }
         default:
             return {...state};
     }
 }
+export default reducer;
