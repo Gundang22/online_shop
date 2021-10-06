@@ -14,15 +14,24 @@ export const getCart = () => async (dispatch) => {
     }
 }
 
-export const addCart = (itemid, quantity) => async(dispatch) => {
+export const addCart = (itemid, variant) => async(dispatch) => {
     try{
-        const data = await commerce.cart.add(itemid, quantity);
+        console.log(variant)
+        let data;
+        if(variant)
+            data = await commerce.cart.add(itemid, 1, variant);
+        else
+            data = await commerce.cart.add(itemid, 1);
+
         dispatch({
             type: 'ADD_CART',
             payload: data,
         });
     } catch(err){
-        console.log(err);
+        dispatch({
+            type: 'CART_ERROR',
+            payload: err
+        });
     }
 }
 

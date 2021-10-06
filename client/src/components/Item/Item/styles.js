@@ -65,4 +65,26 @@ export default makeStyles((theme) => ({
         marginTop:'10px',
         marginBottom:'10px'
     },
+    checkout: {
+        marginTop: '20px',
+        display: 'flex',
+    },
+    qty: {
+        display: 'flex',
+        textAlign: 'center',
+        height:'33px',
+    },
+    qtyButton: {
+        minWidth: '0px',
+        width: '30px',
+        fontSize: '20px',
+        height: '30px',
+        paddingTop: '0px',
+        [theme.breakpoints.down('500')]: {
+            width: '15px',
+        },
+    },
+    description: {
+        marginTop: '20px'
+    },
 }));

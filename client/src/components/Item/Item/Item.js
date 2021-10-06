@@ -37,32 +37,12 @@ const Item = ({item, addToCart}) => {
                         <Typography variant="h5" gutterBottom>
                             {item.name}
                         </Typography>
-                        <Typography variant='h5'>
-                            {item.price.formatted_with_symbol}
-                        </Typography>
                     </div>
                     <Typography dangerouslySetInnerHTML={{__html: item.description}} variant='body2' color='textSecondary' />
+                    <Typography variant='h5' style={{color:'orange'}}>
+                        {item.price.formatted_with_symbol}
+                    </Typography>
                 </CardContent>
-                <CardActions disableSpacing className={classes.cardActions}>
-                    <div>
-                        {
-                            variants.length !== 0 && 
-                            <NativeSelect
-                                value={variants[0].options[0].name}
-                                onChange={handleVariant}
-                            >
-                                {
-                                    variants[0].options.map((variant) => (
-                                        <option value={variant.name}>{variant.name}</option>
-                                    ))
-                                }
-                            </NativeSelect>
-                        }
-                    </div>
-                    <IconButton aria-label='Add to Cart' onClick={() => addToCart(item.id, 1)}>
-                        <AddShoppingCard />
-                    </IconButton>
-                </CardActions>
             </Card>
         </>
     );

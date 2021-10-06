@@ -25,6 +25,7 @@ function Checkout(){
     useEffect(() => {
         dispatch(getCart());
     }, [dispatch]);
+    console.log(cart);
 
     const updateQuantity = (itemid, quantity) => {
         dispatch(updateQty(itemid, quantity));

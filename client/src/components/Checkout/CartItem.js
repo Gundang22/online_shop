@@ -7,8 +7,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 const Cart = ({item, updateQuantity, remove}) => {
     const dispatch = useDispatch();
     const classes = useStyles();
-    const [variants, setVariants] = useState(item.selected_options);
-    console.log(variants);
+    const variants = item.selected_options;
 
     return (
         <>
@@ -33,12 +32,17 @@ const Cart = ({item, updateQuantity, remove}) => {
                             <Grid item xs={12} sm={7} display='flex'>
                                 <Typography variant='colorTextSecondary'>description</Typography>
                             </Grid>
-                            <Grid item sm={3} className={classes.priceSm}>
-                                <Typography>variant</Typography>
+                            <Grid item sm={3} className={classes.priceSm} style={{display:'grid'}}>
                                 {
-                                    variants.map((variant) => (
-                                        <Typography variant='colorTextSecondary'>{variant.name}</Typography>
-                                    ))
+                                    variants ? (
+                                        variants.map((variant) => (
+                                            <Typography variant='colorTextSecondary'>{variant.option_name}</Typography>
+                                        ))
+                                    ) : (
+                                        <>
+                                        </>
+                                    )
+                                    
                                 }
                             </Grid>
                             <Grid item sm={2} style={{textAlign:'center'}}>

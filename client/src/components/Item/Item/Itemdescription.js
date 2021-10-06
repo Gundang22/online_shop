@@ -2,19 +2,21 @@ import React, {useEffect, useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useHistory } from 'react-router';
 import {getItem} from '../../../actions/itemAction';
-import { Paper, Typography, Link, Divider,Grid, Button, CircularProgress } from '@material-ui/core';
+import { Typography, Divider,Grid, Button, CircularProgress } from '@material-ui/core';
 import useStyles from './styles';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import ProductSlide from './ProductSlide';
+import { addCart } from '../../../actions/cartAction';
 
 const Description = () => {
     const {item, loading} = useSelector((state) => state.items);
+    console.log(item);
     const dispatch = useDispatch();
     const history = useHistory();
     const {id} = useParams();
     const classes = useStyles();
 
-    const [selectedVariant, setSelectedVariant] = useState({});
+    const [selectedVariant, setSelectedVariant] = useState([]);
     
     useEffect(() => {
         dispatch(getItem(id));
@@ -23,27 +25,61 @@ const Description = () => {
     useEffect(() => {
         if(item){
             item.variant_groups.map((variant) => {
+                let variants = selectedVariant;
                 let variantGroup = variant.id;
-                variant.options.map((option) => {
-                    console.log(variantGroup,": '",option.id,"'")
-                })
+                let variantSelect = variant.options[0].id;
+                variants[variantGroup] = variantSelect
+                setSelectedVariant({
+                    ...selectedVariant,
+                }); 
             })
         }
-    }, [item])
+    }, [item]);
 
     const back = () => {
         history.goBack();
     };
 
-    // console.log(item);
+    const renderVariants = () => {
+        return(
+            item.variant_groups.map((variantGroup) => (
+                <Grid item style={{marginTop:'10px'}}>
+                    <Typography>{variantGroup.name}:</Typography>
+                    <Grid container spacing={2} style={{paddingTop:'10px'}}>
+                        {variantGroup.options.map((option) => variantButtons(variantGroup, option))}
+                    </Grid>
+                </Grid>
+            ))
+        )
+    }
 
-    const variantButtons = (option) => {
-        if(selectedVariant === option.id)
-            return (
-                <Button variant='contained' color='primary' style={{margin:'10px'}}>{option.name}</Button>
-            )
+    const variantButtons = (variantGroup, option) => {
+        let selected = false;
+        Object.values(selectedVariant).forEach(element => {
+            if(element === option.id)
+                selected = true;
+        });
+        if(selected)
+            return <Button variant='contained' color='primary' style={{margin:'10px'}}>{option.name}</Button>
+            
         else
-            return <Button variant='outlined' color='primary' style={{margin:'10px'}}>{option.name}</Button>
+            return <Button onClick={(e) => handleVariant(e, variantGroup, option)} variant='outlined' color='primary' style={{margin:'10px'}}>{option.name}</Button>
+    }
+
+    const handleVariant = (e, variantGroup, option) => {
+        e.preventDefault();
+        Object.keys(selectedVariant).map((variant) => {
+            if(variant === variantGroup.id){
+                setSelectedVariant({
+                    ...selectedVariant,
+                    [variant]: option.id,
+                })
+            }
+        })
+    }
+
+    const handleAddItem = async() => {
+        dispatch(addCart(item.id, selectedVariant));
     }
 
     if(loading || !item){
@@ -69,7 +105,7 @@ const Description = () => {
                 <Divider style={{margin: '20px 0'}} />
                 <Grid container spacing={4} style={{margin:'auto'}}>
                     <Grid item xs={11} sm={5}>
-                        <ProductSlide image={item.media} />
+                        <ProductSlide image={item.assets} />
                     </Grid>
                     <Grid item xs={12} sm={7}>
                         <Grid item>
@@ -77,19 +113,17 @@ const Description = () => {
                             <Typography>{item.price.formatted_with_symbol}</Typography>
                         </Grid>
                         <Divider className={classes.divider} />
-                        {
-                            item.variant_groups.map((variant) => (
-                                <Grid item style={{marginTop:'10px'}}>
-                                    <Typography>{variant.name}</Typography>
-                                    <Grid container spacing={2} style={{paddingTop:'10px'}}>
-                                        {variant.options.map((option) => variantButtons(option))}
-                                    </Grid>
-                                </Grid>
-                            ))
-                        }
+                        {renderVariants()}
+                        <Grid item className={classes.checkout}>
+                            <Grid item>
+                                <Button onClick={handleAddItem} variant='contained' style={{backgroundColor:'green', color:'white'}}>Add to cart</Button>
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </Grid>
-                <Typography dangerouslySetInnerHTML={{__html: item.description}}></Typography>
+                <Grid className={classes.description}>
+                    <Typography dangerouslySetInnerHTML={{__html: item.description}}></Typography>
+                </Grid>
             </div>
         </>
     );
