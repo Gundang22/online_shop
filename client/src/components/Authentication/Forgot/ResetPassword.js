@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
-import { Paper, Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container } from '@material-ui/core';
+import { Paper, Avatar, Button, CssBaseline, TextField, Grid, Typography } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import useStyles from '../style';
 import { useDispatch, useSelector } from 'react-redux';
 import { getResetPassword, resetPassword } from '../../../actions/authAction';
@@ -13,10 +13,9 @@ const initialState = {
 
 const ResetPassword = () => {
     const dispatch = useDispatch();
-    const history = useHistory();
     const classes = useStyles();
     const {token} = useParams();
-    const [validated, setValidated] = useState(false);
+    const [validated] = useState(false);
     const [formData, setFormData] = useState(initialState);
 
     useEffect(() => {

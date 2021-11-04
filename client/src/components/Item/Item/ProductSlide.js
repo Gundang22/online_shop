@@ -1,22 +1,27 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
+import useStyles from './styles';
 
-const ProductSlide = (image) => {
-    const handleDragStart = (e) => e.preventDefault();
-
+const ProductSlide = ({image}) => {
+    const classes = useStyles();
     const items = [];
 
-    useEffect(() => {
-        image.image.map((image) => {
-            items.push(
-                <img style={{width:'100%'}} src={image.url} onDragStart={handleDragStart} />
-            )
-        }, [])
-    })
+    console.log(image);
+
+    image.map((item) => {
+        items.push(
+            <div className={classes.productSlideImage} style={{backgroundImage:`url(${item.url})`}}></div>
+        );
+    });
 
     return (
-        <AliceCarousel mouseTracking items={items} />
+        <div className='productSlide'>
+            <AliceCarousel
+                mouseTracking 
+                items={items}
+            />
+        </div>
     )
 }
 

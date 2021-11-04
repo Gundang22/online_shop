@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { Paper, Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container } from '@material-ui/core';
+import { Paper, Avatar, Button, CssBaseline, TextField, Link, Grid, Typography } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import {signUp} from '../../../actions/authAction';

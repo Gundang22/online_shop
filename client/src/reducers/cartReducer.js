@@ -22,12 +22,11 @@ const reducer = (state = initialState, action) => {
                 message: null,
             };
         case 'ADD_CART':
-            console.log(action.payload)
             return {
                 ...state,
                 loading: false,
                 cart: action.payload.cart,
-                message: `Item ${action.payload.product_name} Added To Cart!`
+                message: `Item '${action.payload.product_name}' Added To Cart!`
             };
         case 'UPDATE_CAR_QTY':
             return {

@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { useParams } from 'react-router';
 import { Avatar, Divider, CssBaseline, Grid, Paper, Step, Stepper, StepLabel, Typography, CircularProgress } from '@material-ui/core';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import AddressForm from './Address';
 import PaymentForm from './Payment';
 import Review from './Review';
@@ -10,6 +9,7 @@ import useStyles from './styles';
 import PaymentsIcon from '@material-ui/icons/Payment';
 import { captureOrder, getOrderToken } from '../../../actions/orderAction';
 import { useDispatch, useSelector } from 'react-redux';
+import PaymentError from './PaymentError';
 
 const steps = ['Shipping address', 'Payment details', 'Review your order'];
 
@@ -20,7 +20,7 @@ const Checkout = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [addressData, setAddressData] = useState({});
   const [orderData, setOrderData] = useState({});
-  const {checkoutToken, order, loading} = useSelector((state) => state.orders);
+  const {checkoutToken, order, loading, error} = useSelector((state) => state.orders);
 
   useEffect(() => {
     dispatch(getOrderToken(token));
@@ -45,6 +45,7 @@ const Checkout = () => {
     dispatch(captureOrder(checkoutTokenId, orderData));
     handleNext();
   }
+  
 
   const getStepContent = (step) => {
     if(!loading && checkoutToken){
@@ -57,7 +58,6 @@ const Checkout = () => {
           return <Review handleBack={handleBack} checkoutToken={checkoutToken} addressData={addressData} orderData={orderData} submitOrder={submitOrder} />;
         case 3:
           if(order){
-            console.log(order,"123");
             return <Confirmation order={order} />
           }
           else
@@ -70,6 +70,10 @@ const Checkout = () => {
       return <CircularProgress />
     }
   };
+
+  if(error){
+    return (<PaymentError error={error} />)
+  }
 
   return (
     <>

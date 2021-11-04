@@ -1,0 +1,29 @@
+.productSlide .alice-carousel__wrapper{
+    background-color: white;
+}
+.slide .alice-carousel__stage{
+    display: flex;
+    justify-content: left;
+    gap: 14px;
+}
+.slide .alice-carousel__stage-item{
+    width: 200px !important;
+}
+.slide .alice-carousel__prev-btn{
+    text-align: center;
+    color: black;
+    font-weight: 100;
+}
+.slide .alice-carousel__prev-btn p{
+    width: 36px;
+    border: 1px solid;
+}
+.slide .alice-carousel__next-btn{
+    text-align: center;
+    color: black;
+    font-weight: 100;
+}
+.slide .alice-carousel__next-btn p{
+    width: 36px;
+    border: 1px solid;
+}

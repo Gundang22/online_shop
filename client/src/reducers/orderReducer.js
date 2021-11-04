@@ -2,7 +2,7 @@ const initialState = {
     checkoutToken: null,
     order: null,
     loading: false,
-    message: null,
+    error: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -11,35 +11,31 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: true,
-                message: null,
             };
         case 'CAPTURE_ORDER':
             return {
                 ...state,
                 order: action.payload,
                 loading: false,
-                message: null,
+                error: null,
             };
         case 'ORDER_ERROR':
-            console.log(action.payload);
             return {
                 ...state,
                 loading: false,
-                message: action.payload.message
+                error: action.payload
             }
         case 'POST_ORDER':
             return {
                 ...state,
                 checkoutToken: action.payload,
                 loading: false,
-                message: null,
             }
         case 'GET_ORDER_TOKEN':
             return {
                 ...state,
                 checkoutToken: action.payload,
                 loading: false,
-                message: null,
             }
         default:
             return state;

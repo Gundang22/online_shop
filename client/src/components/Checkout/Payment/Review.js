@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Typography, List, ListItem, ListItemText, Grid, Card, CardMedia, CardContent, Divider } from '@material-ui/core';
+import { Button, Typography, Grid, Card, CardMedia, CardContent, Divider } from '@material-ui/core';
 import useStyles from './styles';
-import { useDispatch, useSelector } from 'react-redux';
-import { postOrder } from '../../../actions/orderAction';
 
 
 const Review = ({handleBack, checkoutToken, addressData, orderData, submitOrder}) => {
@@ -10,7 +8,7 @@ const Review = ({handleBack, checkoutToken, addressData, orderData, submitOrder}
   const items = orderData.line_items;
   const [shippingFee, setShippingFee] = useState('');
   const [subtotal, setSubtotal] = useState(0);
-  const [paymentMethod, setPaymentMethod] = useState(orderData.payment.stripe.payment_method.card);
+  const [paymentMethod] = useState(orderData.payment.stripe.payment_method.card);
 
   useEffect(() => {
     checkoutToken.shipping_methods.forEach(method => {
@@ -59,7 +57,7 @@ const Review = ({handleBack, checkoutToken, addressData, orderData, submitOrder}
       <Grid container style={{paddingBottom:'30px'}}>
         <Grid item xs={12} style={{display: 'flex', justifyContent:'space-between'}}>
           <Typography variant='h5'>Subtotal: </Typography> 
-          <Typography variant='h5'>$ {subtotal}</Typography>
+          <Typography variant='h5'>$ {subtotal.toFixed(2)}</Typography>
         </Grid>
       </Grid>
       <Divider />

@@ -1,0 +1,18 @@
+.category .alice-carousel__prev-btn{
+    text-align: center;
+    color: black;
+    font-weight: 100;
+}
+.category .alice-carousel__prev-btn p{
+    width: 36px;
+    border: 1px solid;
+}
+.category .alice-carousel__next-btn{
+    text-align: center;
+    color: black;
+    font-weight: 100;
+}
+.category .alice-carousel__next-btn p{
+    width: 36px;
+    border: 1px solid;
+}

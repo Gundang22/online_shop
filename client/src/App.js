@@ -1,44 +1,40 @@
-import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import {getItems, getItemsPage} from './actions/itemAction';
-import {getCart} from './actions/cartAction';
+import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 
 import './style.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Container} from 'react-bootstrap';
+import { useLocation } from 'react-router-dom';
+
 
 import Home from './components/Layout/Home';
 import NavBar from './components/Navbar/NavBar.js';
 import Checkout from './components/Checkout/Cart.js';
-import Auth from './components/Authentication/Auth';
 import Detail from './components/Item/Item/Itemdescription';
-import Orders from './components/Order/Orders';
 import Payment from './components/Checkout/Payment/Checkout';
-import ResetPassword from './components/Authentication/Forgot/ResetPassword';
+import SearchProducts from './components/Search/SearchProduct';
+import { Divider } from '@material-ui/core';
+import Footer from './components/Layout/Footer';
+import Catalog from './components/Item/Category/Catalog';
+import Documentation from './components/Layout/Documentation';
+import ErrorPage from './components/Layout/ErrorPage';
 
 const App = () => {
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        dispatch(getItemsPage());
-    }, [dispatch]);
-
-
+    const id = useLocation().key;
     return (
-        <div>
+        <div style={{backgroundColor: '#E4CAAA', color:'white'}}>
             <Switch>
-                <Route path='/payment/:token' component={Payment} />
+                <Route path='/payment/:token' component={Payment} key={id} />
                 <div>
                     <NavBar />
                     <Route path='/' exact component={() => <Redirect to='/home' />} />
-                    <Route path='/home' component={Home} />
-                    <Route path='/home/search' component={Home} />
-                    <Route path='/items/:id' component={Detail} />
-                    <Route path='/checkout' component={Checkout} />
-                    <Route path='/authentication' component={Auth} />
-                    <Route path='/orders' component={Orders} />
-                    <Route path='/resetpassword/:token' component={ResetPassword} />
+                    <Route path='/home' exact component={Home} />
+                    <Route path='/search/:query' component={SearchProducts} key={id} />
+                    <Route path='/items/:id' exact component={Detail} />
+                    <Route path='/checkout' exact component={Checkout} />
+                    <Route path='/catalog' component={Catalog} />
+                    <Route path='/documentation' component={Documentation} />
+                    <Divider style={{width:'50px', backgroundColor:'black', opacity:'1',margin:'auto'}} />
+                    <Footer />
                 </div>
             </Switch>
         </div>

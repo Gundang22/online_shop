@@ -39,7 +39,7 @@ const Confirmation = ({order}) => {
                 <Typography className={classes.confirmationText}>Confirmation Number: #{order.customer_reference}</Typography>
                 <Grid container style={{paddingTop:'6px', paddingBottom:'50px'}}>
                     <Grid item xs={12} sm={3}>
-                        <img src="https://img.icons8.com/external-kiranshastry-solid-kiranshastry/50/000000/external-mail-interface-kiranshastry-solid-kiranshastry.png"/>
+                        <img src="https://img.icons8.com/external-kiranshastry-solid-kiranshastry/50/000000/external-mail-interface-kiranshastry-solid-kiranshastry.png" alt='confirm'/>
                     </Grid>
                     <Grid item xs={12} sm={9}>
                         <Typography style={{textAlign:'left'}}>We will shortly provide you an email including invoice and order summary.</Typography>

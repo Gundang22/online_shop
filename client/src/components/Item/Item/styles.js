@@ -39,11 +39,15 @@ export default makeStyles((theme) => ({
     },
 
     card: {
+        backgroundColor: 'rgb(228, 202, 170)',
         maxWidth: '100%',
+        margin:'20px',
     },
     media: {
-        height: 0,
+        height: '300px',
         paddingTop: '56.25%',
+        backgroundColor: 'white',
+        backgroundSize:'contain',
     },
     cardActions: {
         display: 'flex',
@@ -51,13 +55,16 @@ export default makeStyles((theme) => ({
         paddingLeft: '20px'
     },
     cardContent: {
-        display: 'flex',
-        justifyContent: 'space-between',
+        height:'100px',
+        display: "grid",
+        boxOrient: "vertical",
+        lineClamp: 3,
+        overflow: "hidden"
     },
     itemDetailPaper: {
         margin:'auto', 
         maxWidth:'1000px',
-        height: '100vh',
+        paddingTop: '130px',
         padding: '20px', 
     },
     divider: {
@@ -85,6 +92,20 @@ export default makeStyles((theme) => ({
         },
     },
     description: {
-        marginTop: '20px'
+        marginTop: '20px',
+        marginBottom:"20px",
+    },
+    related:{
+        paddingTop: '30px',
+    },
+    productSlideItems: {
+        height:'130px',
+    },
+    productSlideImage:{
+        height:'500px',
+        width:'100%',
+        backgroundRepeat:'no-repeat',
+        backgroundSize:'contain',
+        backgroundPosition:'center',
     },
 }));

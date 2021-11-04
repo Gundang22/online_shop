@@ -1,11 +1,7 @@
-import React, {useEffect, useState} from 'react';
-import { Button, Typography, Grid, TextField } from '@material-ui/core';
+import React from 'react';
+import { Button, Typography, Grid} from '@material-ui/core';
 import {loadStripe} from '@stripe/stripe-js';
 import {Elements, CardElement, ElementsConsumer} from '@stripe/react-stripe-js';
-import Review from './Review';
-import { useDispatch } from 'react-redux';
-import { createPaymentIntent } from '../../../actions/orderAction';
-import { commerce } from '../../../lib/commerce';
 
 const Payment = ({checkoutToken, handleBack, addressData, handleOrderData}) => {
   const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
@@ -48,7 +44,7 @@ const Payment = ({checkoutToken, handleBack, addressData, handleOrderData}) => {
 
       handleOrderData(orderData);
     } catch(err){
-      console.log(err,",!!!");
+      console.log(err);
     }
   }
   

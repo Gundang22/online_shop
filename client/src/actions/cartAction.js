@@ -1,4 +1,3 @@
-import * as api from '../api/index.js';
 import { commerce } from '../lib/commerce.js';
 
 export const getCart = () => async (dispatch) => {
@@ -16,13 +15,11 @@ export const getCart = () => async (dispatch) => {
 
 export const addCart = (itemid, variant) => async(dispatch) => {
     try{
-        console.log(variant)
         let data;
         if(variant)
             data = await commerce.cart.add(itemid, 1, variant);
         else
             data = await commerce.cart.add(itemid, 1);
-
         dispatch({
             type: 'ADD_CART',
             payload: data,
@@ -39,7 +36,6 @@ export const updateQty = (itemid, quantity) => async(dispatch) => {
     try{
         dispatch({type: 'SET_LOADING'});
         const data = await commerce.cart.update(itemid, {quantity});
-        console.log(data);
         dispatch({
             type: 'UPDATE_CAR_QTY',
             payload: data,
@@ -53,7 +49,6 @@ export const deleteCartItem = (itemid) => async (dispatch) => {
     try{
         dispatch({type: 'SET_LOADING'});
         const data = await commerce.cart.remove(itemid)
-        console.log(data);
         dispatch({
             type: 'DELETE_ITEM_CART',
             payload: data

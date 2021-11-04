@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Button, Grid, Typography, TextField, InputLabel, Select, MenuItem } from '@material-ui/core';
+import { Button, Grid, Typography, InputLabel, Select, MenuItem } from '@material-ui/core';
 import {useForm, FormProvider} from 'react-hook-form';
 import { commerce } from '../../../lib/commerce';
 import FormInput from './InputField';
@@ -52,7 +52,7 @@ const Address = ({checkoutToken, handleAddress}) => {
     else
       setDisabled(false);
   }, [shippingOption, shippingState, shippingCountry])
-  
+
   return (
     <>
     <Typography variant="h6" gutterBottom>Shipping Information</Typography>

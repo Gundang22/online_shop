@@ -1,25 +1,29 @@
 import React, {useEffect, useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useHistory } from 'react-router';
-import {getItem} from '../../../actions/itemAction';
+import { useParams } from 'react-router';
+import {getItem, getRelatedProducts} from '../../../actions/itemAction';
 import { Typography, Divider,Grid, Button, CircularProgress } from '@material-ui/core';
 import useStyles from './styles';
-import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import ProductSlide from './ProductSlide';
 import { addCart } from '../../../actions/cartAction';
+import './Slide.css'
+import RelatedProductSlide from './RelatedProductSlide';
+import ErrorPage from '../../Layout/ErrorPage';
+import { Toast } from 'react-bootstrap';
 
 const Description = () => {
-    const {item, loading} = useSelector((state) => state.items);
-    console.log(item);
+    const {item, relatedItems, loading, error} = useSelector((state) => state.items);
+    const {message} = useSelector((state) => state.cartItem);
     const dispatch = useDispatch();
-    const history = useHistory();
     const {id} = useParams();
     const classes = useStyles();
 
     const [selectedVariant, setSelectedVariant] = useState([]);
+    const [showToast, setShowToast] = useState(false);
     
     useEffect(() => {
         dispatch(getItem(id));
+        dispatch(getRelatedProducts(id));
     }, []);
 
     useEffect(() => {
@@ -36,14 +40,14 @@ const Description = () => {
         }
     }, [item]);
 
-    const back = () => {
-        history.goBack();
-    };
+    useEffect(() => {
+        setShowToast(true);
+    }, [message]);
 
     const renderVariants = () => {
         return(
             item.variant_groups.map((variantGroup) => (
-                <Grid item style={{marginTop:'10px'}}>
+                <Grid item style={{marginTop:'10px'}} key={variantGroup.id}>
                     <Typography>{variantGroup.name}:</Typography>
                     <Grid container spacing={2} style={{paddingTop:'10px'}}>
                         {variantGroup.options.map((option) => variantButtons(variantGroup, option))}
@@ -82,13 +86,16 @@ const Description = () => {
         dispatch(addCart(item.id, selectedVariant));
     }
 
-    if(loading || !item){
+    if(error){
+        return(
+            <ErrorPage error={error} />
+        )
+    }
+
+    if(loading || !item || !relatedItems){
         return (
             <>
                 <div className={classes.itemDetailPaper}>
-                    <Button variant='outlined' onClick={back}>
-                        <KeyboardBackspaceIcon />
-                    </Button>
                     <Divider style={{margin: '20px 0'}} />
                     <CircularProgress size='7em' />
                 </div>
@@ -98,19 +105,24 @@ const Description = () => {
     
     return(
         <>
+            {
+                message && 
+                <Toast className="text-center bg-success" style={{position:"fixed", width:"180px", top:'30px', right:'30px', color:'#FF090960000', zIndex:'10'}} onClose={() => setShowToast(false)} show={showToast} delay = {3000} autohide>
+                    <Toast.Body>
+                        <strong>{message}</strong>
+                    </Toast.Body>
+                </Toast>
+            }
             <div className={classes.itemDetailPaper} >
-                <Button variant='outlined' onClick={back}>
-                    <KeyboardBackspaceIcon />
-                </Button>
                 <Divider style={{margin: '20px 0'}} />
-                <Grid container spacing={4} style={{margin:'auto'}}>
-                    <Grid item xs={11} sm={5}>
+                <Grid container spacing={4}>
+                    <Grid item xs={11} sm={7}>
                         <ProductSlide image={item.assets} />
                     </Grid>
-                    <Grid item xs={12} sm={7}>
+                    <Grid item xs={12} sm={5}>
                         <Grid item>
-                            <Typography variant='h5' style={{fontWeight:'bold'}}>{item.name}</Typography>
-                            <Typography>{item.price.formatted_with_symbol}</Typography>
+                            <Typography variant='h5' style={{fontWeight:'bold'}}>{item.name}</Typography><br/>
+                            <Typography style={{color: 'green'}}>{item.price.formatted_with_symbol}</Typography>
                         </Grid>
                         <Divider className={classes.divider} />
                         {renderVariants()}
@@ -122,8 +134,19 @@ const Description = () => {
                     </Grid>
                 </Grid>
                 <Grid className={classes.description}>
+                    <Typography variant='h5' style={{paddingBottom: '20px', fontWeight:'bold'}}>Overview</Typography>
                     <Typography dangerouslySetInnerHTML={{__html: item.description}}></Typography>
                 </Grid>
+                {
+                    relatedItems.length !== 0 && 
+                    <Grid className={classes.related}>
+                        <Typography variant='h5' style={{textAlign:'center', paddingBottom:'20px'}}>Related Products</Typography>
+                        <Grid className='slide'>
+                            <RelatedProductSlide relatedProduct={relatedItems} />
+                        </Grid>
+                    </Grid>
+                }
+                
             </div>
         </>
     );

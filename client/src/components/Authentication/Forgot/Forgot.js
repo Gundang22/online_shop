@@ -1,6 +1,5 @@
 import React, {useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 import {forgotPassword} from '../../../actions/authAction';
 import useStyles from '../style';
 
@@ -11,7 +10,7 @@ const Forgot = ({forgot}) => {
     const [email, setEmail] = useState('');
     const classes = useStyles();
     const dispatch = useDispatch();
-    const [validated, setValidated] = useState(false);
+    const [validated] = useState(false);
     const {message} = useSelector((state) => state.auth);
 
     const handleChange = (e) => {

@@ -1,10 +1,16 @@
 const initialState = {
     item: null,
     items: null,
+    relatedItems: null,
+    itemsPage: null,
+    itemsSort: null,
+    category: null,
+    children: null,
     loading: false,
     numberOfPages: null,
     currentPage: null,
     message: null,
+    error: null,
 }
 
 const reducer = (state = initialState, action) => {
@@ -13,7 +19,6 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: true,
-                message: null,
             };
         case 'GET_ALL':
             return {
@@ -25,7 +30,7 @@ const reducer = (state = initialState, action) => {
         case 'GET_ITEMS_PAGE':
             return {
                 ...state,
-                items: action.payload,
+                itemsPage: action.payload.data,
                 currentPage: action.payload.currentPage,
                 numberOfPages: action.payload.numberOfPages,
                 loading: false,
@@ -39,41 +44,41 @@ const reducer = (state = initialState, action) => {
                 message: null,
             };
         case 'SEARCH_ITEM':
-            return {...state, 
+            return {
+                ...state, 
                 items: action.payload,
                 loading: false,
                 message: null,
             };
-        case 'POST_ITEM':
+        case 'GET_CAT_ITEMS':
             return {
-                ...state, 
+                ...state,
                 items: action.payload.data,
-                currentPage: action.payload.currentPage,
-                numberOfPages: action.payload.numberOfPages,
+                category: action.payload.category,
+                children: action.payload.children,
                 loading: false,
-                message: action.payload.message,
-            };
-        case 'UPDATE':
+                message: null,
+            }
+        case 'GET_RELATED_ITEMS':
             return {
                 ...state,
-                items: state.items.map((item) => item._id === action.payload.data._id ? action.payload.data : item),
-                loading: false,
-                message: action.payload.message,
+                relatedItems: action.payload.data,
+                category: action.payload.category,
             }
-        case 'DELETE':
+        case 'SORT_ITEMS': 
+            return{
+                ...state,
+                itemsSort: action.payload,
+                loading: false,
+                message: null,
+            }
+        case 'ITEM_ERROR':
             return {
                 ...state,
-                items: state.items.filter((item) => item._id !== action.payload.data),
                 loading: false,
-                message: action.payload.message,
+                error: action.payload
             }
-        case 'SET_MESSAGE':
-            return {
-                ...state,
-                loading: false,
-                message: action.payload.message
-            }
-        case 'CLEAR':
+        case 'ITEM_CLEAR':
             return {state: initialState}
         default: 
             return state;

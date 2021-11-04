@@ -1,59 +1,87 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
 import { Row, Container } from 'react-bootstrap';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Item from './Item/Item';
-import {AddItem} from '../AddItem/AddItem.js';
-import { CircularProgress, Button, Grid } from '@material-ui/core';
-import { Toast } from 'react-bootstrap';
-import { getItemsPage } from '../../actions/itemAction';
+import { Grid, CircularProgress, Paper, Typography, Select, MenuItem } from '@material-ui/core';
 import { addCart } from '../../actions/cartAction';
+import Pagination from './Pagination';
+import useStyles from './style';
+import { useLocation, useHistory } from 'react-router';
+import { getItemsPage, sortItems } from '../../actions/itemAction';
 
-export const Items = ({cart, setCart}) => {
-    console.log(cart);
-    const [showMessage, setShowMessage] = useState(false);
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
+};
+
+export const Items = ({items}) => {
+    const location = window.location.pathname;
+    const history = useHistory();
+    const classes = useStyles();
     const dispatch = useDispatch();
-    const user = JSON.parse(localStorage.getItem('profile'))?.result;
-    getItemsPage();
+    const query = useQuery();
+    const page = query.get('page') || 1;
+    const sort = query.get('sort') || 'default';
+    const [sortBy, setSortBy] = useState(sort);
+    const {itemsPage, itemsSort, loading, numberOfPages} = useSelector((state) => state.items);
+
+    useEffect(() => {
+        if(items)
+            dispatch(sortItems(items, sortBy))
+    }, [sortBy])
+    useEffect(() => {
+        if(itemsSort)
+            dispatch(getItemsPage(itemsSort, page));
+    }, [itemsSort]);
 
     const addToCart = async(itemid, quantity) => {
         dispatch(addCart(itemid, quantity));
     }
 
-    const { items } = useSelector((state) => state.items);
-    const {message} = useSelector((state) => state.cartItem);
+    const handleSort = (value) => {
+        setSortBy(value);
+        history.push(`${location}?page=${page}&sort=${value}`)
+    }
 
-    useEffect(() => {
-        setShowMessage(true);
-    },[message]);
+    if(!itemsPage || loading){
+        return (
+            <Grid className={classes.loading}>
+                <CircularProgress />
+            </Grid>
+        )
+    }
+
 
     return (
-        <div>
-            <Container className='py-4'>
+        <Container className='py-4'>
+            <Typography variant='h5' style={{textAlign:'center', marginBottom:'30px'}}>Products</Typography>
+            <Paper className={classes.sortPaper}>
+                <Typography color='textSecondary' style={{display:'grid',alignContent:'center'}}>{items.length} results</Typography>
+                <Grid>
+                    Sort By 
+                    <Select
+                        id='sort'
+                        value={sortBy}
+                        defaultValue='Best Match'
+                        onChange={(e) => handleSort(e.target.value)}
+                        style={{marginLeft:'10px'}}
+                    >
+                        <MenuItem value={'default'}>Best Match</MenuItem>
+                        <MenuItem value={'highlow'}>Price High-Low</MenuItem>
+                        <MenuItem value={'lowhigh'}>Price Low-High</MenuItem>
+                    </Select>
+                </Grid>
+            </Paper>
+            <Row style={{width:'auto'}}>
                 {
-                    message && 
-                    <Toast className="text-center bg-success" style={{position:"fixed", width:"180px", top:'30px', right:'30px', color:'#EDEDED', zIndex:'10'}} onClose={() => setShowMessage(false)} show={showMessage} delay = {3000} autohide>
-                        <Toast.Body>
-                            <strong>{message}</strong>
-                        </Toast.Body>
-                    </Toast>
+                    itemsPage.map((item) => (
+                        <Grid item key={item.id} xs={12} sm={6} md={4}>
+                            <Item item={item} key={item.id} addToCart={addToCart} />
+                        </Grid>
+                    ))
                 }
-                <Row style={{width:'auto'}}>
-                    {
-                        !items ?
-                        (
-                            <CircularProgress />
-                        ) : (
-                            items.map((item) => (
-                                <Grid item key={item.id} xs={12} sm={6} md={4} lg={3}>
-                                    <Item item={item} addToCart={addToCart} />
-                                </Grid>
-                            ))
-                        )
-                    }
-                </Row>
-            </Container>
-        </div>
+            </Row>
+            <Pagination page={page} numberOfPages={numberOfPages} key={page} />
+        </Container>
     );
 }
 
