@@ -1,32 +1,16 @@
-Elegant
+# Elegant
 
-Overall:
+This is a quick guide to setup the coding environment for this project.
 
-Elegant is a mock online shop platform that allows users to buy products on the website. This site is implemented with React, logic handling using javascript, and font-end design using several npm packages.
+1. Download node.js
+ 
+```
+https://nodejs.org/en/download/
+```
 
-Features:
+2. Open up your terminal and navigate to the folder that you want your local repository to be located in. Type in `git clone https://github.com/Gundang22/online_shop.git`
 
--Responsive/interactive web design
--Product search
--Product categorization
--Related items
--Pagination
--Navigation
--Product variant selection
--User cart handling
--Checkout
--Webpage error handling
--Retriving product information from CommerceJS API
--Retriving user cart (locally) informaiton from CommerceJS API
--Capture order information using CommerceJS API
--Shipping & payment handling (Commerce JS for shipping handling & Stripe as payment gateway)
--Product management (Commerce JS)
--Product analytics and reports (Commerce JS)
+3. Using terminal and navigate to the client folder of the project and run `npm install` to install all the required dependencies. After the installation, run `npm run start` on terminal to start development server.
 
-Development Process:
+4. Visit `localhost:3000` in your browser.
 
-There exists an earlier version of the website. However, it wasn't published at all.
-
-The earlier version of the website uses Express as its backend server and uses MongoDB and Cloudinary as its data storage. The users are able to register accounts and retrieve their personal information (items in cart, order, profile, etc.) through middleware authentications with the use of data encrypting.
-
-During the development process of the older version, I realized that I could not 100% maintain the security of data stored on the website. As a counter method, 
